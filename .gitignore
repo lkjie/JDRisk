@@ -1,11 +1,8 @@
-<<<<<<< HEAD
 .idea/
 *.pyc
 
 data/
 
-.ipynb_checkpoints/
-=======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -107,4 +104,4 @@ ENV/
 
 # mypy
 .mypy_cache/
->>>>>>> 5be3321e4fe5b959ea29960dd7f44d0ef388ad39
+

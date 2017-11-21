@@ -1,11 +1,17 @@
 import pandas as pd
 import datetime
 import numpy as np
+
 t_click = pd.read_csv('../data/t_click.csv')
 t_loan = pd.read_csv('../data/t_loan.csv')
 t_loan_sum = pd.read_csv('../data/t_loan_sum.csv')
 t_order = pd.read_csv('../data/t_order.csv')
 t_user = pd.read_csv('../data/t_user.csv')
+
+'''
+提取9,10,11三个月的特征，预测12月的借贷总额
+'''
+
 '''
 测试集：uid，时间，特征
 回归问题，利用8月份特征训练九月份借款总额，以此类推
@@ -16,33 +22,30 @@ feature = t_user
 '''
 2016-08-03(周三)到2016-11-30(周三)
 '''
-t_loan_8 = t_loan[(t_loan['loan_time'] >= "2016-08-01 00:00:00") & (t_loan['loan_time'] < "2016-09-01 00:00:00")]
-t_loan_8_sum = t_loan_8.groupby('uid').sum()
-t_loan_8_sum.rename(columns=lambda x: '8_' + x, inplace=True)
-t_loan_8_sum.reset_index(level=['uid'], inplace=True)
+
 t_loan_9 = t_loan[(t_loan['loan_time'] >= "2016-09-01 00:00:00") & (t_loan['loan_time'] < "2016-10-01 00:00:00")]
 t_loan_9_sum = t_loan_9.groupby('uid').sum()
-t_loan_9_sum.rename(columns=lambda x: '9_' + x, inplace=True)
+t_loan_9_sum.rename(columns=lambda x: '1_' + x, inplace=True) # 9月份，第一个月
 t_loan_9_sum.reset_index(level=['uid'], inplace=True)
 t_loan_10 = t_loan[(t_loan['loan_time'] >= "2016-10-01 00:00:00") & (t_loan['loan_time'] < "2016-11-01 00:00:00")]
 t_loan_10_sum = t_loan_10.groupby('uid').sum()
-t_loan_10_sum.rename(columns=lambda x: '10_' + x, inplace=True)
+t_loan_10_sum.rename(columns=lambda x: '2_' + x, inplace=True) # 10月份，第2个月
 t_loan_10_sum.reset_index(level=['uid'], inplace=True)
 t_loan_11 = t_loan[(t_loan['loan_time'] >= "2016-11-01 00:00:00") & (t_loan['loan_time'] < "2016-12-01 00:00:00")]
 t_loan_11_sum = t_loan_11.groupby('uid').sum()
-t_loan_11_sum.rename(columns=lambda x: '11_' + x, inplace=True)
+t_loan_11_sum.rename(columns=lambda x: '3_' + x, inplace=True) # 11月份，第3个月
 t_loan_11_sum.reset_index(level=['uid'], inplace=True)
 
-feature = pd.merge(feature, t_loan_8_sum, 'left', left_on='uid', right_on='uid')
 feature = pd.merge(feature, t_loan_9_sum, 'left', left_on='uid', right_on='uid')
 feature = pd.merge(feature, t_loan_10_sum, 'left', left_on='uid', right_on='uid')
 feature = pd.merge(feature, t_loan_11_sum, 'left', left_on='uid', right_on='uid')
 # 按周聚合数据
-d_start = datetime.datetime.strptime('2016-08-03 00:00:00', '%Y-%m-%d %H:%M:%S')
-d_end = datetime.datetime.strptime('2016-12-01 00:00:00', '%Y-%m-%d %H:%M:%S')
+d_start = datetime.datetime.strptime('2016-08-31 00:00:00', '%Y-%m-%d %H:%M:%S')
+d_end = datetime.datetime.strptime('2016-11-30 00:00:00', '%Y-%m-%d %H:%M:%S')
 d_now = d_start
 week = datetime.timedelta(days=7)
 t_loan['loan_time'] = pd.to_datetime(t_loan['loan_time'])
+week_count = 1
 while d_now < d_end:
     # 每周借款总数
     t_loan_this_week = t_loan[(t_loan['loan_time'] >= d_now) & (t_loan['loan_time'] < d_now + week)].groupby(
@@ -50,9 +53,11 @@ while d_now < d_end:
     # 每周借款次数
     t_loan_this_week_count = t_loan[(t_loan['loan_time'] >= d_now) & (t_loan['loan_time'] < d_now + week)].groupby(
         'uid').count()
-    t_loan_this_week.rename(columns=lambda x: 'week_' + d_now.strftime('%m-%d') + x, inplace=True)
+    # t_loan_this_week.rename(columns=lambda x: 'week_' + d_now.strftime('%m-%d') + x, inplace=True)
+    t_loan_this_week.rename(columns=lambda x: 'week_' + str(week_count) + x, inplace=True)
     feature = pd.merge(feature, t_loan_this_week, 'left', left_on='uid', right_index=True)
     d_now += week
+    week_count += 1
 
 '''
 t_user
@@ -92,10 +97,12 @@ t_order
 
 t_order['month']=t_order['buy_time'].str.split('-').str.get(1)
 
-for month in t_order['month'].drop_duplicates():
+for i,month in enumerate(t_order['month'].drop_duplicates().sort_values()):
+    if month == '08':
+        continue
     cols=['price','qty','discount'	]
-    feature[[str(month)+'_'+str(c) for c in cols]] = t_order[t_order['month']==month].groupby('uid')[cols].sum()
-
+    feature[[str(i-1)+'_'+str(c) for c in cols]] = t_order[t_order['month']==month].groupby('uid')[cols].sum()
+# feature = feature.drop(['0'+str(c) for c in ['price','qty','discount']],axis=1)
 '''
 t_click
 总点击次数，平均每天点击次数，平均每周点击次数，平均每月点击次数，
@@ -109,6 +116,10 @@ t_click
 t_loan_sum
 
 '''
+
+
 feature['active_date'] = pd.to_datetime(feature['active_date'])
-feature['active_date'] = feature.datetime.values.astype(np.int64)
+feature['active_date'] = feature.active_date.values.astype(np.int64)
+
+feature.to_csv('../model_file/feature09_11.csv')
 print("")
