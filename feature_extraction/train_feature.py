@@ -98,6 +98,7 @@ t_order
 t_order['month']=t_order['buy_time'].str.split('-').str.get(1)
 
 for i,month in enumerate(t_order['month'].drop_duplicates().sort_values()):
+
     if month == '11':
         continue
     cols=['price','qty','discount'	]

@@ -89,12 +89,17 @@ t_order
 品类：（购物偏好）
 
 '''
+# 每个订单优惠金额
+
+t_order['discount_price'] = t_order['price'] * t_order['discount']
 
 t_order['month']=t_order['buy_time'].str.split('-').str.get(1)
 
-for month in t_order['month'].drop_duplicates():
-    cols=['price','qty','discount'	]
-    feature[[str(month)+'_'+str(c) for c in cols]] = t_order[t_order['month']==month].groupby('uid')[cols].sum()
+
+for month in t_order['month'].drop_duplicates().sort_values():
+    cols=['price','qty','discount','discount_price']
+    feature[[str(month)+'_sum_'+str(c) for c in cols]] = t_order[t_order['month']==month].groupby('uid')[cols].sum()
+    feature[[str(month) + '_mean_' + str(c) for c in cols]] = t_order[t_order['month'] == month].groupby('uid')[cols].mean()
 
 '''
 t_click
@@ -104,6 +109,15 @@ t_click
 点击页面：（大家都关注的页面，与借贷数据合并，通过协同过滤或者关联规则寻找是否有浏览相同页面的人会产生类似的借贷趋势）
 页面参数：
 '''
+
+
+t_click['month']=t_click['click_time'].str.split('-').str.get(1)
+t_click['day']=t_click['click_time'].str.split(' ').str.get(0)
+feature_click = t_user[['uid','age']]
+for month in t_click['month'].drop_duplicates().sort_values():
+    feature_click[[str(month)+'_month_sum_click']] = t_click[t_click['month']==month].groupby('uid')[['uid']].count()
+for day in t_click['day'].drop_duplicates().sort_values():
+    feature_click[[str(day)+'_day_sum_click']] = t_click[t_click['month']==day].groupby('uid')[['uid']].count()
 
 '''
 t_loan_sum
