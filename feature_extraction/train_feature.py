@@ -97,12 +97,13 @@ t_order
 
 t_order['month']=t_order['buy_time'].str.split('-').str.get(1)
 
-for i,month in enumerate(t_order['month'].drop_duplicates().sort_values()):
+for i, month in enumerate(t_order['month'].drop_duplicates().sort_values()):
 
     if month == '11':
         continue
-    cols=['price','qty','discount'	]
+    cols=['price','qty','discount']
     feature[[str(i)+'_'+str(c) for c in cols]] = t_order[t_order['month']==month].groupby('uid')[cols].sum()
+
 '''
 t_click
 总点击次数，平均每天点击次数，平均每周点击次数，平均每月点击次数，

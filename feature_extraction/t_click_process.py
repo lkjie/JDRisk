@@ -33,5 +33,8 @@ feature_click['day_click'] = feature_click['all_click'] / (datetime.datetime.str
 # 平均每周点击次数
 feature_click['week_click'] = feature_click['all_click'] / int(((datetime.datetime.strptime(t_click['day'].max(),"%Y-%m-%d") - datetime.datetime.strptime(t_click['day'].min(),"%Y-%m-%d")).days)/7)
 
-
+# 测试双十一影响
+# 按人和日期排序测分布
+# for day in t_click['day'].drop_duplicates().sort_values():
+#     feature_click[[str(day)+'_day_sum_click']] = t_click[t_click['day']==day].groupby('uid')[['uid']].count()
 print("")
