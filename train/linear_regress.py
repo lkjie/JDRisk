@@ -8,7 +8,7 @@ f_train = '../model_file/feature08_10.csv'
 # 预测特征文件
 f_predict = '../model_file/feature09_11.csv'
 # 提交结果文件
-f_submit = '../data/Loan_Forecasting_Upload.csv'
+f_submit = 'uploadfile/Loan_Forecasting_Upload.csv'
 
 # 测试集比例
 test_size=0.2
