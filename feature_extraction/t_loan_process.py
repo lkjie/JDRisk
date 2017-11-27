@@ -8,6 +8,8 @@ t_loan = pd.read_csv('../data/t_loan.csv')
 # t_order = pd.read_csv('../data/t_order.csv')
 t_user = pd.read_csv('../data/t_user.csv')
 
+ts_loan = pd.read_pickle('extracted_features_loan.pickle')
+
 t_loan['exp_loan_amount'] = np.exp(t_loan['loan_amount'])
 # loan
 # 每月借款总额，每周借款总额，每月借款次数，每周借款次数，4个月借款总额，8-11月每月平均借款，8-10月每月平均借款（排除双十一），借款总期数，每次借款平均期数，每月借款平均期数
