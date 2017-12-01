@@ -4,11 +4,11 @@ from sklearn.cross_validation import train_test_split
 import numpy as np
 
 # 训练特征文件
-f_train = '../model_file/feature08_10.csv'
+f_train = '../model_file/train_feature_1201.csv'
 # 预测特征文件
-f_predict = '../model_file/feature09_11.csv'
+f_predict = '../model_file/test_feature_1201.csv'
 # 提交结果文件
-f_submit = 'uploadfile/Loan_Forecasting_Upload.csv'
+f_submit = 'uploadfile/1201.csv'
 
 # 测试集比例
 test_size=0.2
@@ -23,10 +23,12 @@ param = {
 }
 
 feature = pd.read_csv(f_train)
-
+feature.columns = ['uid']+ [i for i in range(feature.shape[1] -1)]
 label = pd.read_csv('../data/t_loan_sum.csv', usecols=['uid', 'loan_sum'])
 data = feature.merge(label, on='uid')
+# data.fillna(0,inplace=True)
 data = data.set_index('uid')
+
 train, test = train_test_split(data, test_size=test_size, random_state=1)
 
 feature_cols = train.columns.drop('loan_sum')
@@ -46,6 +48,7 @@ print(bst.eval(dtrain))
 print(bst.get_score())
 
 predict = pd.read_csv(f_predict, index_col='uid')
+predict.columns = [i for i in range(predict.shape[1])]
 dpredict = xgb.DMatrix(predict[feature_cols])
 
 submit = predict.index.to_frame()
