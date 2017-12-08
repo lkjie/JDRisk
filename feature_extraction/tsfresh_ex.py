@@ -15,9 +15,9 @@ def run_click():
         t_click_9_11 = t_click[t_click['click_time'] > '2016-08-31']
         # extracted_features_click = extract_features(t_click, column_id="uid", column_sort="click_time",default_fc_parameters=settings)
         # extracted_features_click.to_pickle('extracted_features_click.pickle')
-        extracted_features_click = extract_features(t_click, column_id="uid", column_sort="click_time",default_fc_parameters=settings)
+        extracted_features_click = extract_features(t_click_8_10, column_id="uid", column_sort="click_time",default_fc_parameters=settings)
         extracted_features_click.to_pickle('extracted_features_click_8_10.pickle')
-        extracted_features_click = extract_features(t_click, column_id="uid", column_sort="click_time",default_fc_parameters=settings)
+        extracted_features_click = extract_features(t_click_9_11, column_id="uid", column_sort="click_time",default_fc_parameters=settings)
         extracted_features_click.to_pickle('extracted_features_click_9_11.pickle')
     except Exception as e:
         print(e)
@@ -29,9 +29,9 @@ def run_loan():
         t_loan_9_11 = t_loan[t_loan['loan_time']>'2016-08-31']
         # extracted_features_loan = extract_features(t_loan, column_id="uid", column_sort="loan_time",default_fc_parameters=settings)
         # extracted_features_loan.to_pickle('extracted_features_loan.pickle')
-        extracted_features_loan = extract_features(t_loan, column_id="uid", column_sort="loan_time")
+        extracted_features_loan = extract_features(t_loan_8_10, column_id="uid", column_sort="loan_time")
         extracted_features_loan.to_pickle('extracted_features_loan_8_10.pickle')
-        extracted_features_loan = extract_features(t_loan, column_id="uid", column_sort="loan_time")
+        extracted_features_loan = extract_features(t_loan_9_11, column_id="uid", column_sort="loan_time")
         extracted_features_loan.to_pickle('extracted_features_loan_9_11.pickle')
     except Exception as e:
         print(e)
@@ -45,9 +45,9 @@ def run_order():
 
         # extracted_features_order = extract_features(t_order, column_id="uid", column_sort="buy_time",default_fc_parameters=settings)
         # extracted_features_order.to_pickle('extracted_features_order.pickle')
-        extracted_features_order = extract_features(t_order, column_id="uid", column_sort="buy_time",default_fc_parameters=settings)
+        extracted_features_order = extract_features(t_order_8_10, column_id="uid", column_sort="buy_time",default_fc_parameters=settings)
         extracted_features_order.to_pickle('extracted_features_order_8_10.pickle')
-        extracted_features_order = extract_features(t_order, column_id="uid", column_sort="buy_time",default_fc_parameters=settings)
+        extracted_features_order = extract_features(t_order_9_11, column_id="uid", column_sort="buy_time",default_fc_parameters=settings)
         extracted_features_order.to_pickle('extracted_features_order_9_11.pickle')
     except Exception as e:
         print(e)

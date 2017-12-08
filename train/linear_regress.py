@@ -4,11 +4,11 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 
 # 训练特征文件
-f_train = '../model_file/train_feature_1201.csv'
+f_train = '../model_file/train_feature_1208.csv'
 # 预测特征文件
-f_predict = '../model_file/test_feature_1201.csv'
+f_predict = '../model_file/test_feature_1208.csv'
 # 提交结果文件
-f_submit = 'uploadfile/1201.csv'
+f_submit = 'uploadfile/1208.csv'
 
 # 测试集比例
 test_size=0.2
