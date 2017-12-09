@@ -3,7 +3,8 @@ import datetime
 from tsfresh.feature_extraction import ComprehensiveFCParameters
 from tsfresh.feature_extraction import extract_features, EfficientFCParameters
 
-settings = EfficientFCParameters()
+# settings = EfficientFCParameters()
+settings = None
 
 def run_click():
     t_click = pd.read_csv('../data/t_click.csv')
