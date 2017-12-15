@@ -1,10 +1,10 @@
 import pandas as pd
 import datetime
-from tsfresh.feature_extraction import ComprehensiveFCParameters
-from tsfresh.feature_extraction import extract_features, EfficientFCParameters
+from tsfresh.feature_extraction import extract_features, EfficientFCParameters, MinimalFCParameters, ComprehensiveFCParameters
 
 # settings = EfficientFCParameters()
-settings = None
+settings = MinimalFCParameters()
+# settings = ComprehensiveFCParameters()
 
 def run_click():
     t_click = pd.read_csv('../data/t_click.csv')
